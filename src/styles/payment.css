@@ -1,0 +1,204 @@
+/* payment.css */
+
+.payment-container {
+    max-width: 700px;
+    margin: 0 auto;
+    margin-top: 3%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .payment-container h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-top: 8px;
+    height:60px;
+    color:white
+  }
+  
+  .payment-method {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 40px;
+  }
+  
+  .payment-method label {
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .payment-method input[type="radio"] {
+    margin-right: 10px;
+  }
+  
+  .card-payment, .upi-payment {
+    display: none;
+  }
+  
+  .card-payment.active, .upi-payment.active {
+    display: block;
+  }
+  
+  .card-payment h3, .upi-payment h3 {
+    margin-bottom: 40px;
+  }
+  
+  .card-payment form, .upi-payment form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-payment form div, .upi-payment form div {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-payment form label, .upi-payment form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .card-payment form input, .upi-payment form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .card-payment form button, .upi-payment form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: center;
+  }
+  
+  .card-payment form button:hover, .upi-payment form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  .otp-step, .pin-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 120px;
+  }
+  
+  .otp-step h2, .pin-step h2 {
+    margin-bottom: 40px;
+  }
+  
+  .otp-step form, .pin-step form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .otp-container, .pin-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  
+  .otp-input, .pin-input {
+    width: 100px;
+    height: 70px;
+    margin: 5px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .otp-step button, .pin-step button {
+    width: 100px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  .otp-step button:hover, .pin-step button:hover {
+    background-color: #0056b3;
+  }
+  
+  .processing {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .processing h2 {
+    color: #007bff;
+  }
+  
+  .payment-success-container {
+    text-align: center;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: 10%;
+  }
+  
+  .payment-success-container h1 {
+    color: #4a90e2;
+  }
+  
+  .payment-success-container p {
+    margin-bottom: 20px;
+  }
+  
+  .payment-success-container .react-pdf__Page {
+    margin: 20px auto;
+  }
+
+  /* General styles for processing */
+.processing-container {
+  position: fixed; /* Keeps the container fixed in view */
+  top: 0; /* Aligns to the top of the viewport */
+  left: 0; /* Aligns to the left of the viewport */
+  width: 100%; /* Takes full width */
+  height: 100%; /* Takes full height */
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex; /* Centers content horizontally and vertically */
+  align-items: center; /* Centers content vertically */
+  justify-content: center; /* Centers content horizontally */
+  z-index: 1000; /* High z-index to be on top of other content */
+}
+
+.processing-container h2 {
+  color: #fff; /* White text color */
+  font-size: 1.5em; /* Font size for visibility */
+  margin: 0 20px; /* Space around the text */
+}
+
+.processing-container .spinner {
+  border: 5px solid #f3f3f3; /* Light grey border */
+  border-top: 5px solid #007bff; /* Blue border on top */
+  border-radius: 50%; /* Circular spinner */
+  width: 50px; /* Width of spinner */
+  height: 50px; /* Height of spinner */
+  animation: spin 1s linear infinite; /* Spinning animation */
+}
+
+/* Keyframes for spinning animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -1,0 +1,224 @@
+.invoice-bill {
+    width: 40%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .invoice-bill h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #333;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+  }
+  
+  .invoice-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between invoice items */
+  }
+  
+  .invoice-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Ensure label and value align vertically */
+    padding: 6px 0; /* Reduced padding */
+    border-bottom: 1px solid #eee;
+  }
+  
+  .invoice-item:last-child {
+    border-bottom: none;
+  }
+  
+  .invoice-label {
+    font-weight: bold;
+    color: #555;
+    margin-right: 8px; /* Reduced margin */
+    flex: 0 0 auto; /* Prevent label from growing */
+  }
+  
+  .invoice-value {
+    flex: 1;
+    text-align: right;
+    color: #333;
+    margin-left: 8px; /* Reduced margin to bring value closer */
+  }
+  
+  .invoice-action {
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .invoice-action .btn {
+    background-color: #007bff;
+    width:25%;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .invoice-action .btn:hover {
+    background-color: #0056b3;
+  }  
+
+  .loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .loading-spinner::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-left-color: #000;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Optional: Add responsiveness */
+  @media (max-width: 768px) {
+    .invoice-bill {
+      width: 90%;
+    }
+  
+    .invoice-item {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 6px; /* Adjust padding for smaller screens */
+    }
+  
+    .invoice-label {
+      margin-right: 0; /* No margin for vertical layout */
+      margin-bottom: 4px; /* Space between label and value in vertical layout */
+    }
+  
+    .invoice-value {
+      margin-left: 0; /* No margin in vertical layout */
+    }
+  }
+
+  /*Payment Instruction*/
+
+  /* Container styles for advice and instructions */
+.payment-advice, .payment-instructions {
+  width:90%;
+  margin:auto;
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #ffd5d5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40Px;
+}
+
+/* Heading styles */
+.payment-advice h2, .payment-instructions h2 {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+/* List styles */
+.payment-advice ul, .payment-instructions ol {
+  margin-left: 20px;
+  line-height: 1.6;
+}
+
+/* Link styles */
+.payment-instructions a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.payment-instructions a:hover {
+  text-decoration: underline;
+}
+
+/* Container for input and button */
+.invoice-input, .invoice-button {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px; /* Space between input and button */
+}
+
+/* Style for input element */
+.label-style {
+  margin-right: 10px;
+  font-size: large;
+  color: #333;
+}
+
+.invoice-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.invoice-input input[type="text"] {
+  width: 300px; /* Adjust width as needed */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.invoice-button {
+  margin-top: 20px; /* Add some space between the input field and button */
+  text-align: center; /* Center the button horizontally */
+}
+
+.invoice-button button.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Button hover effect */
+.invoice-button button.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Button active effect */
+.invoice-button button.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Button focus effect */
+.invoice-button button.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}
+
+
+
+
+
+
+  

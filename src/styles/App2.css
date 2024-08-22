@@ -1,0 +1,30 @@
+div #app2{
+    text-align: center;
+}
+table{
+    border-radius: 10px;
+}
+
+
+div #add2{
+    background: url('https://pearlsol.com/img/breadcrumb/hd%20blog%20pic.jpg');
+    background:cover;
+}
+div #edit2{
+
+    background: url('https://pearlsol.com/img/breadcrumb/hd%20blog%20pic.jpg');
+    background:cover;
+    margin-top: 15%;
+
+}
+div{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.error {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 5px;
+  }
+  
+  
