@@ -1,39 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../styles/invoice.css"; 
+import "../styles/invoice.css";
 import Header1 from "../components/Header1";
 import { useNavigate } from 'react-router-dom';
 
 function PaymentInvoice() {
   const [invoices, setInvoices] = useState([]);
-  const [searchName, setSearchName] = useState(""); 
-  const [loading, setLoading] = useState(false); 
-  const [error, setError] = useState(null); 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate(); // Hook to handle navigation
 
-  const handleSearch = () => {
-    if (!searchName) {
-      return;
-    }
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      // Retrieve the name from sessionStorage
+      const name = sessionStorage.getItem('Violator Name'); // Assuming the name is stored under the key 'name'
 
-    setLoading(true);
-    axios.get(`http://localhost:8086/invoice/name/${encodeURIComponent(searchName)}`)
-      .then((res) => {
-        setInvoices(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("An error occurred while fetching the invoices.");
-        setLoading(false);
-      });
-  };
+      if (name) {
+        setLoading(true);
+        try {
+          const res = await axios.get(`http://localhost:8086/invoice/name/${encodeURIComponent(name)}`);
+          setInvoices(res.data);
+        } catch (err) {
+          console.error(err);
+          setError("An error occurred while fetching the invoices.");
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setError("No name found in session storage.");
+      }
+    };
+
+    fetchInvoices();
+  }, []); // Empty dependency array means this useEffect runs once on component mount
 
   const handleProceedToPayment = (amount, invoiceData) => {
     // Store invoice data in sessionStorage
     sessionStorage.setItem('invoiceData', JSON.stringify([invoiceData]));
-
-    // Navigate to the payment page with amount as state
     navigate('/payment', { state: { amount } });
   };
 
@@ -67,8 +70,6 @@ function PaymentInvoice() {
         <h3>Payment Instructions</h3>
         <p>To make a payment for your invoice, follow these steps:</p>
         <ol>
-          <li>Enter the name you provided to the officer at the time of the violation in the box below</li>
-          <li>Click the "Submit" button to view your invoice.</li>
           <li>Carefully review the invoice details. If any information appears incorrect or does not match your records, please contact the support team for assistance.</li>
           <li>Select your preferred payment method, such as credit/debit card or UPI (Unified Payments Interface).</li>
           <li>Enter the required payment details and proceed to complete the payment for the violation.</li>
@@ -76,19 +77,8 @@ function PaymentInvoice() {
           <li>Ensure that you make your payment before the due date to avoid any additional penalties.</li>
         </ol>
       </div>
-      <div className="invoice-input">
-        <label className="label-style" htmlFor="violationID">Enter Name:</label>
-        <input 
-          type="text" 
-          value={searchName} 
-          onChange={(e) => setSearchName(e.target.value)} 
-        />
-      </div>
-      <div className="invoice-button">
-        <button className="btn btn-primary" onClick={handleSearch}>Submit</button>
-      </div>
       {invoices.length === 0 ? (
-        <div></div>
+        <div>No invoices found.</div>
       ) : (
         <div className="invoice-bill">
           <h1>Invoice Details</h1>
@@ -135,11 +125,11 @@ function PaymentInvoice() {
                   <span className="invoice-label">Due Date:</span>
                   <span className="invoice-value">{invoice.due_date}</span>
                 </div>
-                <br/>
+                <br />
                 <div className="invoice-button">
-                  <button 
-                    className="btn btn-primary" 
-                    style={{ width: '40%' }} 
+                  <button
+                    className="btn btn-primary"
+                    style={{ width: '40%' }}
                     onClick={() => handleProceedToPayment(invoice.amount, invoice)}
                   >
                     Proceed to Payment
@@ -155,6 +145,7 @@ function PaymentInvoice() {
 }
 
 export default PaymentInvoice;
+
 
 
 

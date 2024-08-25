@@ -2,19 +2,18 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/App2.css";
-import HeaderAdmin from "../components/Header3";
+import HeaderOfficer from "../components/Header2";
 import Swal from 'sweetalert2';
 
-function EditOfficer() {
-  
+function EditViolator() {
   const { id } = useParams();
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     axios
-      .get(`http://localhost:8086/officer/${id}`)
+      .get(`http://localhost:8086/violator/${id}`)
       .then((response) => setData(response.data))
       .catch((err) => console.log(err));
   }, [id]);
@@ -44,6 +43,18 @@ function EditOfficer() {
       case 'address':
         error = value ? '' : 'Please enter the Address!';
         break;
+      case 'gender':
+        error = value ? '' : 'Please enter the Gender!';
+        break;
+      case 'license_plate':
+        error = value ? '' : 'Please enter the License Plate!';
+        break;
+      case 'vehicle_type':
+        error = value ? '' : 'Please enter the Vehicle Type!';
+        break;
+      case 'vehicle_model':
+        error = value ? '' : 'Please enter the Vehicle Model!';
+        break;
       default:
         break;
     }
@@ -60,16 +71,17 @@ function EditOfficer() {
     e.preventDefault();
     const validationErrors = validateValues(data);
     if (Object.keys(validationErrors).length === 0) {
-      axios.put("http://localhost:8086/officer", data)
+      axios
+        .put("http://localhost:8086/violator", data)
         .then((res) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Update Successfully',
-            text: 'Officer have been Updated successfully!',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            navigate("/view-Officer");
-          });
+            Swal.fire({
+                icon: 'success',
+                title: 'Update Successfully',
+                text: 'Violator have been Updated successfully!',
+                confirmButtonText: 'OK'
+              }).then(() => {
+                navigate("/view-violator");
+              });
         })
         .catch((err) => console.log(err));
     } else {
@@ -86,29 +98,30 @@ function EditOfficer() {
   return (
     <div>
       <div className='page'>
-        <HeaderAdmin />
+        <HeaderOfficer />
       </div>
       <div
         id="edit2"
-        className="d-flex w-100 vh-100 justify-content-center align-items-center"
+        className="d-flex w-100 vh-100 justify-content-center align-items-center "
+        style={{ marginTop: "30%" }}
       >
         <div className="w-50 border bg-light p-5">
           <form onSubmit={handleSubmit}>
-            <h3>UPDATE OFFICER DATA</h3>
-            <br/>
+            <h3>UPDATE VIOLATOR DATA</h3>
+            <br />
             <div>
-              <label htmlFor="officer_id">Officer ID :</label><br/><br/>
+              <label htmlFor="violator_id">Violator ID :</label><br /><br />
               <input
                 type="text"
                 disabled
-                name="officer_id"
+                name="violator_id"
                 className="form-control"
-                value={data.officer_id || ''}
+                value={data.violator_id || ''}
               />
             </div>
-            <br/>
+            <br />
             <div>
-              <label htmlFor="name">Name :</label><br/><br/>
+              <label htmlFor="name">Name :</label><br /><br />
               <input
                 type="text"
                 name="name"
@@ -118,9 +131,9 @@ function EditOfficer() {
               />
               {errors.name && <small className="text-danger">{errors.name}</small>}
             </div>
-            <br/>
+            <br />
             <div>
-              <label htmlFor="email">Email :</label><br/><br/>
+              <label htmlFor="email">Email :</label><br /><br />
               <input
                 type="text"
                 name="email"
@@ -130,9 +143,9 @@ function EditOfficer() {
               />
               {errors.email && <small className="text-danger">{errors.email}</small>}
             </div>
-            <br/>
+            <br />
             <div>
-              <label htmlFor="password">Password :</label><br/><br/>
+              <label htmlFor="password">Password :</label><br /><br />
               <input
                 type="text"
                 name="password"
@@ -144,7 +157,7 @@ function EditOfficer() {
             </div>
             <br />
             <div>
-              <label htmlFor="confrim_password">Confirm Password :</label><br/><br/>
+              <label htmlFor="confrim_password">Confirm Password :</label><br /><br />
               <input
                 type="text"
                 name="confrim_password"
@@ -156,7 +169,7 @@ function EditOfficer() {
             </div>
             <br />
             <div>
-              <label htmlFor="phone_number">Phone Number :</label><br/><br/>
+              <label htmlFor="phone_number">Phone Number :</label><br /><br />
               <input
                 type="text"
                 name="phone_number"
@@ -168,7 +181,7 @@ function EditOfficer() {
             </div>
             <br />
             <div>
-              <label htmlFor="address">Address :</label><br/><br/>
+              <label htmlFor="address">Address :</label><br /><br />
               <input
                 type="text"
                 name="address"
@@ -177,6 +190,54 @@ function EditOfficer() {
                 onChange={handleChange}
               />
               {errors.address && <small className="text-danger">{errors.address}</small>}
+            </div>
+            <br />
+            <div>
+              <label htmlFor="gender">Gender :</label><br /><br />
+              <input
+                type="text"
+                name="gender"
+                className="form-control"
+                value={data.gender || ''}
+                onChange={handleChange}
+              />
+              {errors.gender && <small className="text-danger">{errors.gender}</small>}
+            </div>
+            <br />
+            <div>
+              <label htmlFor="license_plate">License Plate :</label><br /><br />
+              <input
+                type="text"
+                name="license_plate"
+                className="form-control"
+                value={data.license_plate || ''}
+                onChange={handleChange}
+              />
+              {errors.license_plate && <small className="text-danger">{errors.license_plate}</small>}
+            </div>
+            <br />
+            <div>
+              <label htmlFor="vehicle_type">Vehicle Type:</label><br /><br />
+              <input
+                type="text"
+                name="vehicle_type"
+                className="form-control"
+                value={data.vehicle_type || ''}
+                onChange={handleChange}
+              />
+              {errors.vehicle_type && <small className="text-danger">{errors.vehicle_type}</small>}
+            </div>
+            <br />
+            <div>
+              <label htmlFor="vehicle_model">Vehicle Model:</label><br /><br />
+              <input
+                type="text"
+                name="vehicle_model"
+                className="form-control"
+                value={data.vehicle_model || ''}
+                onChange={handleChange}
+              />
+              {errors.vehicle_model && <small className="text-danger">{errors.vehicle_model}</small>}
             </div>
             <br /><br />
             <button className="btn btn-primary" style={{ width: '100%' }}>Update</button>
@@ -187,4 +248,4 @@ function EditOfficer() {
   );
 }
 
-export default EditOfficer;
+export default EditViolator;

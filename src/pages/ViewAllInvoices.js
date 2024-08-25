@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2"; // Import SweetAlert2
 import '../styles/view.css';
-import Header1 from "../components/Header1";
 import HeaderOfficer from "../components/Header2";
 
 function ViewAllInvoice() {
@@ -23,18 +23,39 @@ function ViewAllInvoice() {
       });
   }, []);
 
-  let handleSubmit = (id) => {
-    const conf = window.confirm("Do you want to delete");
-    if (conf) {
-      axios
-        .delete("http://localhost:8086/invoice/" + id)
-        .then((res) => {
-          alert("Invoice has deleted");
-          navigate("/view-invoice");
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
-    }
+  const handleSubmit = (id) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this invoice?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://localhost:8086/invoice/${id}`)
+          .then((res) => {
+            Swal.fire(
+              'Deleted!',
+              'Invoice has been deleted.',
+              'success'
+            );
+            // Refresh records after deletion
+            setRecords(records.filter(record => record.invoice_id !== id));
+          })
+          .catch((err) => {
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the invoice.',
+              'error'
+            );
+            console.log(err);
+          });
+      }
+    });
   };
 
   const handleViewInvoice = (Id) => {
@@ -49,18 +70,19 @@ function ViewAllInvoice() {
   return (
     <div id="body">
       <div className='page'><HeaderOfficer/></div>
-      <div className="container ">
+      <div className="container">
         <br />
         <h1 id="app2" className="text-center text-bg-success ">
           Invoice Records
         </h1>
 
         <div className="text-end">
+          {/* You can add other actions here if needed */}
         </div>
         <br />
-        <table className="table table-bordered  table-striped w-100 border bg-white shadow px-5 pb-5 rounded ">
+        <table className="table table-bordered table-striped w-100 border bg-white shadow px-5 pb-5 rounded">
           <thead>
-            <tr>              
+            <tr>
               <th>Invoice ID</th>
               <th>Amount</th>
               <th>Due Date</th>
@@ -79,9 +101,9 @@ function ViewAllInvoice() {
             {records.map((d, i) => (
               <tr key={i}>
                 <td>{d.invoice_id}</td>
-                <td>{d.invoice_Date}</td>
                 <td>{d.amount}</td>
                 <td>{d.due_date}</td>
+                <td>{d.invoice_date}</td>
                 <td>{d.violation.violation_type}</td>
                 <td>{d.violation.description}</td>
                 <td>{d.violation.violator.name}</td>
@@ -90,9 +112,9 @@ function ViewAllInvoice() {
                 <td>{d.violation.violator.vehicle_model}</td>
                 <td>
                   <button
-                    onClick={(e) => handleSubmit(d.invoice_id)}
+                    onClick={() => handleSubmit(d.invoice_id)}
                     className="btn btn-sm ms-1 btn-danger"
-                   >
+                  >
                     Delete
                   </button>
                 </td>

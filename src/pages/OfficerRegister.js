@@ -9,7 +9,7 @@ function OfficerRegister() {
     name: "",
     email: "",
     password: "",
-    confirm_password: "",
+    confrim_password: "",
     phone_number: "",
     address: "",
   });
@@ -24,8 +24,8 @@ function OfficerRegister() {
   });
 
   const navigate = useNavigate();
-
-  const validateField = (name, value) => {
+  
+  const validateField = (name, value, inputData) => {
     let error = "";
     switch (name) {
       case "name":
@@ -37,6 +37,11 @@ function OfficerRegister() {
         break;
       case "password":
         if (!value) error = "Please enter the Password!";
+        else if (value.length < 8) error = "Password must be at least 8 characters long!";
+        else if (!/[A-Z]/.test(value)) error = "Password must contain at least one uppercase letter!";
+        else if (!/[a-z]/.test(value)) error = "Password must contain at least one lowercase letter!";
+        else if (!/[0-9]/.test(value)) error = "Password must contain at least one number!";
+        else if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) error = "Password must contain at least one special character!";
         break;
       case "confrim_password":
         if (!value) error = "Please enter the Confirm Password!";
@@ -53,7 +58,7 @@ function OfficerRegister() {
         break;
     }
     return error;
-  };
+  };  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,18 +69,18 @@ function OfficerRegister() {
 
     setErrors((prevErrors) => ({
       ...prevErrors,
-      [name]: validateField(name, value)
+      [name]: validateField(name, value, { ...inputData, [name]: value })
     }));
   };
 
   const validateValues = () => {
     const validationErrors = {
-      name: validateField("name", inputData.name),
-      email: validateField("email", inputData.email),
-      password: validateField("password", inputData.password),
-      confrim_password: validateField("confrim_password", inputData.confrim_password),
-      phone_number: validateField("phone_number", inputData.phone_number),
-      address: validateField("address", inputData.address),
+      name: validateField("name", inputData.name, inputData),
+      email: validateField("email", inputData.email, inputData),
+      password: validateField("password", inputData.password, inputData),
+      confrim_password: validateField("confrim_password", inputData.confrim_password, inputData),
+      phone_number: validateField("phone_number", inputData.phone_number, inputData),
+      address: validateField("address", inputData.address, inputData),
     };
 
     setErrors(validationErrors);
@@ -198,7 +203,7 @@ function OfficerRegister() {
             </div>
 
             <div>
-              <p>Already have an account? 
+              <p style={{textAlign:"center"}}>Already have an account? 
                 <Link to="/officerlogin" className="link">Login</Link>
               </p>
             </div>

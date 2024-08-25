@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import '../styles/view.css'
+import Swal from "sweetalert2"; // Import SweetAlert2
+import '../styles/view.css';
 import HeaderAdmin from "../components/Header3";
 
 function ViewOfficer() {
@@ -21,38 +22,59 @@ function ViewOfficer() {
       });
   }, []);
 
-  let handleSubmit = (id) => {
-    const conf = window.confirm("Do you want to delete");
-    if (conf) {
-      axios
-        .delete("http://localhost:8086/officer/" + id)
-        .then((res) => {
-          alert("Officer  has deleted");
-          navigate("/view-officer");
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
-    }
+  const handleSubmit = (id) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this officer?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://localhost:8086/officer/${id}`)
+          .then((res) => {
+            Swal.fire(
+              'Deleted!',
+              'Officer has been deleted.',
+              'success'
+            );
+            // Refresh records after deletion
+            setRecords(records.filter(record => record.officer_id !== id));
+          })
+          .catch((err) => {
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the officer.',
+              'error'
+            );
+            console.log(err);
+          });
+      }
+    });
   };
 
   return (
     <div id="body">
-    <div className='page'>
-      <HeaderAdmin />
-    </div>
-      <div className="container ">
+      <div className='page'>
+        <HeaderAdmin />
+      </div>
+      <div className="container">
         <br />
-        <h1 id="app2" className="text-center text-bg-success ">
-          Officer Details 
+        <h1 id="app2" className="text-center text-bg-success">
+          Officer Details
         </h1>
 
         <div className="text-end">
+          {/* You can add other actions here if needed */}
         </div>
         <br />
-        <table className="table table-bordered  table-striped w-100 border bg-white shadow px-5 pb-5 rounded ">
+        <table className="table table-bordered table-striped w-100 border bg-white shadow px-5 pb-5 rounded">
           <thead>
             <tr>
-               
               <th>Officer ID</th>
               <th>Name</th>
               <th>Email</th>
@@ -70,16 +92,15 @@ function ViewOfficer() {
                 <td>{d.email}</td>
                 <td>{d.phone_number}</td>
                 <td>{d.address}</td>
-
                 <td>
-                <Link
+                  <Link
                     to={`/edit-officer/${d.officer_id}`}
-                    className="btn btn-sm btn-success "
+                    className="btn btn-sm btn-success"
                   >
                     Update
                   </Link>
                   <button
-                    onClick={(e) => handleSubmit(d.officer_id)}
+                    onClick={() => handleSubmit(d.officer_id)}
                     className="btn btn-sm ms-1 btn-danger"
                   >
                     Delete

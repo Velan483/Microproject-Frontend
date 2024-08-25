@@ -1,17 +1,20 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import '../App.css';
 import React, { useState } from 'react';
 
 function HeaderViolator() {
-
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const navigate = useNavigate();
 
-       const handleToggleClick = () => {
-       setIsNavOpen(!isNavOpen);
-    };
+  const handleToggleClick = () => {
+    setIsNavOpen(!isNavOpen);
+  };
 
-  
+  const handleLogout = () => {
+    sessionStorage.clear();
+    navigate('/');
+  };
 
   return (
     <header className="header">
@@ -42,8 +45,8 @@ function HeaderViolator() {
               <Link to="/payment-invoice">Payment</Link>
             </li>
             <li>
-              <button className='btn btn-danger'>
-                <Link to="/">Logout</Link>
+              <button className='btn btn-danger' onClick={handleLogout}>
+                Logout
               </button>
             </li>
           </ul>

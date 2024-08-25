@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import '../styles/view.css'
+import Swal from "sweetalert2";
 import HeaderAdmin from "../components/Header3";
 
 function ViewViolationCopy() {
@@ -22,17 +23,38 @@ function ViewViolationCopy() {
   }, []);
 
   let handleSubmit = (id) => {
-    const conf = window.confirm("Do you want to delete");
-    if (conf) {
-      axios
-        .delete("http://localhost:8086/violation/" + id)
-        .then((res) => {
-          alert("Violation has deleted");
-          navigate("/view-violation");
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this violation?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete("http://localhost:8086/violation/" + id)
+          .then((res) => {
+            Swal.fire(
+              'Deleted!',
+              'Violation has been deleted.',
+              'success'
+            );
+            navigate("/view-violation");
+            window.location.reload();
+          })
+          .catch((err) => {
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the violation.',
+              'error'
+            );
+            console.log(err);
+          });
+      }
+    });
   };
 
   return (

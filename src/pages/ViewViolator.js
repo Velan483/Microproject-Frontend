@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import '../styles/view.css'
-import Header1 from "../components/Header1";
+import Swal from "sweetalert2"; // Import SweetAlert2
+import '../styles/view.css';
 import HeaderOfficer from "../components/Header2";
 
 function ViewViolator() {
@@ -23,24 +23,45 @@ function ViewViolator() {
   }, []);
 
   let handleSubmit = (id) => {
-    const conf = window.confirm("Do you want to delete");
-    if (conf) {
-      axios
-        .delete("http://localhost:8086/violator/" + id)
-        .then((res) => {
-          alert("Violator  has deleted");
-          navigate("/view-violator");
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this violator?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete("http://localhost:8086/violator/" + id)
+          .then((res) => {
+            Swal.fire(
+              'Deleted!',
+              'Violator has been deleted.',
+              'success'
+            );
+            navigate("/view-violator");
+            window.location.reload();
+          })
+          .catch((err) => {
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the violator.',
+              'error'
+            );
+            console.log(err);
+          });
+      }
+    });
   };
 
   return (
     <div id="body">
-    <div className='page'><HeaderOfficer/></div>
-      <div className="container ">
-        <br />
+      <div className='page'><HeaderOfficer/></div>
+      <div className="container">
+        <br /> 
         <h1 id="app2" className="text-center text-bg-success ">
           Violator Details 
         </h1>
@@ -51,10 +72,9 @@ function ViewViolator() {
           </Link>
         </div>
         <br />
-        <table className="table table-bordered  table-striped w-100 border bg-white shadow px-5 pb-5 rounded ">
+        <table className="table table-bordered table-striped w-100 border bg-white shadow px-5 pb-5 rounded">
           <thead>
             <tr>
-               
               <th>Violator ID</th>
               <th>Name</th>
               <th>Email</th>
@@ -80,13 +100,18 @@ function ViewViolator() {
                 <td>{d.license_plate}</td>
                 <td>{d.vehicle_type}</td>
                 <td>{d.vehicle_model}</td>
-
                 <td>
+                  <Link
+                    to={`/edit-violator/${d.violator_id}`}
+                    className="btn btn-sm btn-success"
+                  >
+                    Update
+                  </Link>
                   <button
-                    onClick={(e) => handleSubmit(d.violator_id)}
+                    onClick={() => handleSubmit(d.violator_id)}
                     className="btn btn-sm ms-1 btn-danger"
                   >
-                    Delete
+                   &nbsp;Delete 
                   </button>
                 </td>
               </tr>

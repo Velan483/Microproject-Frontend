@@ -3,7 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import '../styles/home.css';
 
-function ContactUs() {
+function SendRequest() {
   const [inputData, setInputData] = useState({
     name: "",
     email: "",
@@ -92,9 +92,9 @@ function ContactUs() {
   };
 
   return (
-    <div className="contact-us-container">
-      <h1>Contact Us</h1>
-      <form className="contact-form" onSubmit={handleSubmit}>
+    <div className="contact-us-container" style={{marginTop:"6%"}}>
+      <h2>Send Request Message</h2>
+      <form className="contact-form" onSubmit={handleSubmit}> <br/>
         <div>
           <label htmlFor="name">Name</label>
           <input
@@ -141,4 +141,4 @@ function ContactUs() {
   );
 }
 
-export default ContactUs;
+export default SendRequest;

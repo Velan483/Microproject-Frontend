@@ -30,6 +30,8 @@
 
   /* About Us Style */
   .about-container {
+    width:95%;
+    margin: auto;
     padding: 2rem;
     background-color: #e0f7fa; 
     color: #333;
@@ -79,6 +81,8 @@
   
   /* Traffic Rules Style */
   .traffic-rules-container {
+    width:95%;
+    margin: auto;
     padding: 2rem;
     background-color: #c9d2d6; /* Light blue background */
     color: #333;

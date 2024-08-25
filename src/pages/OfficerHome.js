@@ -4,7 +4,6 @@ import '../styles/home.css';
 import About from './About';
 import TrafficRules from './TrafficRules';
 import ContactUs from './Contact';
-import HeaderViolator from '../components/Header1';
 import HeaderOfficer from '../components/Header2';
 
 function OfficerHome() {

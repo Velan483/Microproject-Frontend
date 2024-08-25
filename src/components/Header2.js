@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import '../App.css';
 
 function HeaderOfficer() {
-
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleToggleClick = () => {
-  setIsNavOpen(!isNavOpen);
-};
+    setIsNavOpen(!isNavOpen);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.clear(); // Clear all session data
+    navigate('/'); // Redirect to login page
+  };
 
   return (
     <header className="header">
@@ -20,10 +25,9 @@ function HeaderOfficer() {
           </Link>
         </div>
         <button className="nav-toggle" onClick={handleToggleClick}>
-           ☰
-       </button>
+          ☰
+        </button>
         <nav className={`nav ${isNavOpen ? 'open' : ''}`}>
-        
           <ul>
             <li>
               <Link to="/officer-home">Home</Link>
@@ -41,8 +45,8 @@ function HeaderOfficer() {
               <Link to="/officer-dashboard">Dashboard</Link>
             </li>
             <li>
-              <button className='btn btn-danger'>
-                <Link to="/">Logout</Link>
+              <button className='btn btn-danger' onClick={handleLogout}>
+                Logout
               </button>
             </li>
           </ul>

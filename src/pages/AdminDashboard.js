@@ -16,7 +16,8 @@ function AdminDashboard() {
         <Link to="/view-officer" className="dashboard-link">View and Update Officer</Link>
         <Link to="/view-violations" className="dashboard-link">View Violation Records</Link>
         <Link to="/view-all-invoices" className="dashboard-link">View Invoice Records</Link>
-        <Link to="/view-message" className="dashboard-link">View User Message</Link>      
+        <Link to="/view-message" className="dashboard-link">View User Message</Link>    
+        <Link to="/view-payment" className="dashboard-link">Track Payment</Link>  
       </div>
     </div>
     </div>

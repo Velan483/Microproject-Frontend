@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import '../styles/view.css';
 import HeaderAdmin from "../components/Header3";
 
@@ -22,18 +23,39 @@ function ViewAllInvoiceCopy() {
       });
   }, []);
 
-  let handleSubmit = (id) => {
-    const conf = window.confirm("Do you want to delete");
-    if (conf) {
-      axios
-        .delete("http://localhost:8086/invoice/" + id)
-        .then((res) => {
-          alert("Invoice has deleted");
-          navigate("/view-invoice");
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
-    }
+  const handleSubmit = (id) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this invoice?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://localhost:8086/invoice/${id}`)
+          .then((res) => {
+            Swal.fire(
+              'Deleted!',
+              'Invoice has been deleted.',
+              'success'
+            );
+            // Refresh records after deletion
+            setRecords(records.filter(record => record.invoice_id !== id));
+          })
+          .catch((err) => {
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the invoice.',
+              'error'
+            );
+            console.log(err);
+          });
+      }
+    });
   };
 
   const handleViewInvoice = (Id) => {

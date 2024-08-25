@@ -27,6 +27,7 @@ function RegisterViolator() {
     }
   });
   const [errors, setErrors] = useState({});
+  const [touchedFields, setTouchedFields] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,35 +56,101 @@ function RegisterViolator() {
     } else {
       setInputData(prevData => {
         const newInputData = { ...prevData, [name]: value };
-        const validationErrors = validateValues(newInputData);
-        setErrors(validationErrors);
+        if (touchedFields[name]) {
+          const validationErrors = validateValues(newInputData);
+          setErrors(validationErrors);
+        }
         return newInputData;
       });
     }
   };
 
-  const validateValues = (data) => {
-    let newErrors = {};
-    if (data.name.length === 0) newErrors.name = "Please enter the Name!";
-    if (data.email.length === 0) newErrors.email = "Please enter the Email!";
-    if (data.password.length === 0) newErrors.password = "Please enter the Password!";
-    if (data.confrim_password.length === 0) newErrors.confrim_password = "Please enter the Confirm Password!";
-    if (data.confrim_password !== data.password) newErrors.confrim_password = "Confirm Password does not match Password!";
-    if (data.phone_number.length === 0) newErrors.phone_number = "Please enter the Phone Number!";
-    if (data.phone_number.length !== 10) newErrors.phone_number = "Phone Number should be exactly 10 digits!";
-    if (data.address.length === 0) newErrors.address = "Please enter the Address!";
-    if (data.gender.length === 0) newErrors.gender = "Please select the Gender!";
-    if (data.license_plate.length === 0) newErrors.license_plate = "Please enter the License Plate!";
-    if (data.vehicle_type.length === 0) newErrors.vehicle_type = "Please enter the Vehicle Type!";
-    if (data.vehicle_model.length === 0) newErrors.vehicle_model = "Please enter the Vehicle Model!";
-
-    return newErrors;
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    setTouchedFields(prevState => ({ ...prevState, [name]: true }));
+    const validationErrors = validateValues({ ...inputData, [name]: e.target.value });
+    setErrors(validationErrors);
   };
 
-  
+  const validateValues = (data) => {
+    const errors = {};
+    const validations = {
+      name: {
+        condition: data.name.trim().length === 0,
+        message: "Name is required."
+      },
+      email: {
+        condition: data.email.trim().length === 0,
+        message: "Email is required."
+      },
+      password: {
+        condition: data.password.length === 0,
+        message: "Password is required.",
+        additionalChecks: [
+          { test: data.password.length < 8, message: "Password must be at least 8 characters long." },
+          { test: !/[A-Z]/.test(data.password), message: "Password must contain at least one uppercase letter." },
+          { test: !/[a-z]/.test(data.password), message: "Password must contain at least one lowercase letter." },
+          { test: !/[0-9]/.test(data.password), message: "Password must contain at least one number." },
+          { test: !/[!@#$%^&*(),.?":{}|<>]/.test(data.password), message: "Password must contain at least one special character." }
+        ]
+      },
+      confrim_password: {
+        condition: data.confrim_password.length === 0,
+        message: "Confirm Password is required.",
+        additionalChecks: [
+          { test: data.confrim_password !== data.password, message: "Confirm Password must match Password." }
+        ]
+      },
+      phone_number: {
+        condition: data.phone_number.length === 0,
+        message: "Phone Number is required.",
+        additionalChecks: [
+          { test: data.phone_number.length !== 10, message: "Phone Number must be exactly 10 digits long." }
+        ]
+      },
+      address: {
+        condition: data.address.trim().length === 0,
+        message: "Address is required."
+      },
+      gender: {
+        condition: data.gender === "",
+        message: "Gender is required."
+      },
+      license_plate: {
+        condition: data.license_plate.trim().length === 0,
+        message: "License Plate is required."
+      },
+      vehicle_type: {
+        condition: data.vehicle_type.trim().length === 0,
+        message: "Vehicle Type is required."
+      },
+      vehicle_model: {
+        condition: data.vehicle_model.trim().length === 0,
+        message: "Vehicle Model is required."
+      }
+    };
+
+    Object.keys(validations).forEach(field => {
+      const { condition, message, additionalChecks } = validations[field];
+      if (condition) {
+        errors[field] = message;
+      } else if (additionalChecks) {
+        additionalChecks.forEach(check => {
+          if (check.test) {
+            errors[field] = check.message;
+          }
+        });
+      }
+    });
+
+    return errors;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const validationErrors = validateValues(inputData);
+    setErrors(validationErrors);
+
     if (Object.keys(validationErrors).length === 0) {
       axios.post("http://localhost:8086/violator", inputData)
         .then(() => {
@@ -97,8 +164,6 @@ function RegisterViolator() {
           });
         })
         .catch((err) => console.error(err));
-    } else {
-      setErrors(validationErrors);
     }
   };
 
@@ -120,8 +185,9 @@ function RegisterViolator() {
                 className="login"
                 value={inputData.name}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
-              {errors.name && <div className="error">{errors.name}</div>}
+              {touchedFields.name && errors.name && <div className="error">{errors.name}</div>}
             </div>
 
             <div>
@@ -133,8 +199,9 @@ function RegisterViolator() {
                 className="login"
                 value={inputData.email}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
-              {errors.email && <div className="error">{errors.email}</div>}
+              {touchedFields.email && errors.email && <div className="error">{errors.email}</div>}
             </div>
 
             <div>
@@ -146,8 +213,9 @@ function RegisterViolator() {
                 className="login"
                 value={inputData.password}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
-              {errors.password && <div className="error">{errors.password}</div>}
+              {touchedFields.password && errors.password && <div className="error">{errors.password}</div>}
             </div>
 
             <div>
@@ -159,8 +227,9 @@ function RegisterViolator() {
                 className="login"
                 value={inputData.confrim_password}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
-              {errors.confrim_password && <div className="error">{errors.confrim_password}</div>}
+              {touchedFields.confrim_password && errors.confrim_password && <div className="error">{errors.confrim_password}</div>}
             </div>
 
             <div>
@@ -172,8 +241,9 @@ function RegisterViolator() {
                 className="login"
                 value={inputData.phone_number}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
-              {errors.phone_number && <div className="error">{errors.phone_number}</div>}
+              {touchedFields.phone_number && errors.phone_number && <div className="error">{errors.phone_number}</div>}
             </div>
 
             <div>
@@ -185,8 +255,9 @@ function RegisterViolator() {
                 className="login"
                 value={inputData.address}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
-              {errors.address && <div className="error">{errors.address}</div>}
+              {touchedFields.address && errors.address && <div className="error">{errors.address}</div>}
             </div>
 
             <div>
@@ -197,13 +268,14 @@ function RegisterViolator() {
                 className="login"
                 value={inputData.gender}
                 onChange={handleChange}
+                onBlur={handleBlur}
               >
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Others">Others</option>
               </select>
-              {errors.gender && <div className="error">{errors.gender}</div>}
+              {touchedFields.gender && errors.gender && <div className="error">{errors.gender}</div>}
             </div>
 
             <div>
@@ -215,8 +287,9 @@ function RegisterViolator() {
                 className="login"
                 value={inputData.license_plate}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
-              {errors.license_plate && <div className="error">{errors.license_plate}</div>}
+              {touchedFields.license_plate && errors.license_plate && <div className="error">{errors.license_plate}</div>}
             </div>
 
             <div>
@@ -228,8 +301,9 @@ function RegisterViolator() {
                 className="login"
                 value={inputData.vehicle_type}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
-              {errors.vehicle_type && <div className="error">{errors.vehicle_type}</div>}
+              {touchedFields.vehicle_type && errors.vehicle_type && <div className="error">{errors.vehicle_type}</div>}
             </div>
 
             <div>
@@ -241,8 +315,9 @@ function RegisterViolator() {
                 className="login"
                 value={inputData.vehicle_model}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
-              {errors.vehicle_model && <div className="error">{errors.vehicle_model}</div>}
+              {touchedFields.vehicle_model && errors.vehicle_model && <div className="error">{errors.vehicle_model}</div>}
             </div>
 
             <div>
@@ -262,4 +337,3 @@ function RegisterViolator() {
 }
 
 export default RegisterViolator;
-
